@@ -10,5 +10,5 @@ data:
   IMAGE_S3: "https://clo835group10.s3.amazonaws.com/"
   image : |
     {
-      "backgroundimg1" : "https://clo835group10.s3.amazonaws.com/background.jpg"
+      "url" : "https://clo835group10.s3.amazonaws.com/background.jpg"
     }

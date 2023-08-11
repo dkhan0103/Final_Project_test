@@ -3,7 +3,8 @@ from pymysql import connections
 import os
 import random
 import argparse
-import boto3 
+import boto3
+import subprocess
 
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ DBPWD = os.environ.get("DBPWD") or "password"
 DATABASE = os.environ.get("DATABASE") or "employees"
 DBPORT = int(os.environ.get("DBPORT"))
 GROUP_NAME = os.environ.get('GROUP_NAME')
-BACKGROUND_URL = os.environ.get('image1') or "failed to load"
+BACKGROUND_URL = os.environ.get('url') or "failed to load"
     
 
 # Create a connection to the MySQL database
@@ -60,12 +61,39 @@ table = 'employee';
 # BACKGROUND = "background/backgroundimg1"
 
 
+# url = "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
+local_folder = "static"  # Change this to your desired local folder path
+
+# Create the local folder if it doesn't exist
+subprocess.run(["mkdir", "-p", local_folder])
+
+filename = "static/sample.jpg"
+
+# # Use curl to download the image
+# subprocess.run(["curl", "-o", f"{local_folder}/sample.jpg", url])
+
+# print("Image downloaded using curl")
+
+# @app.route("/", methods=['GET', 'POST'])
+# def home():
+#     return render_template('addemp.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
+
+# @app.route("/about", methods=['GET','POST' ])
+# def about():
+#     return render_template('about.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
+ 
+# Function to download the image using curl
+def download_image(url, filename):
+    subprocess.run(["curl", "-o", filename, BACKGROUND_URL]) 
+    
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    download_image(BACKGROUND_URL, filename)
     return render_template('addemp.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
 
-@app.route("/about", methods=['GET','POST' ])
+@app.route("/about", methods=['GET','POST'])
 def about():
+    download_image(BACKGROUND_URL, filename)
     return render_template('about.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
 
     
