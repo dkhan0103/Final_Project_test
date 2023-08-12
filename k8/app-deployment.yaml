@@ -19,11 +19,11 @@ spec:
     spec:
       containers:
       - name: webserver
-        image: dkhan0103/clo835:v2
+        image: dkhan0103/clo835:v3
         
         env:
         - name: DBHOST
-          value: mysql.project.svc.cluster.local  # Replace with the hostname of your MySQL service
+          value: mysql.final.svc.cluster.local  # Replace with the hostname of your MySQL service
         - name: DBUSER
           value: root
         - name: DBPWD

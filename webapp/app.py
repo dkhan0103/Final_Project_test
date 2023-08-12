@@ -18,6 +18,9 @@ DBUSER = os.environ.get("DBUSER") or "root"
 DBPWD = os.environ.get("DBPWD") or "passwors"
 DATABASE = os.environ.get("DATABASE") or "employees"
 COLOR_FROM_ENV = os.environ.get('APP_COLOR') or "lime"
+IMAGE_URL = os.environ.get("IMAGE_URL") or "Broken IMG"
+GROUP_NAME = os.environ.get("GROUP_NAME")
+
 DBPORT = os.environ.get("DBPORT")
 if DBPORT is not None:
     try:
@@ -66,7 +69,7 @@ if not os.path.exists(DOWNLOADS_PATH):
     
     
 # Download the image from the S3 URL
-IMAGE_URL = "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
+# IMAGE_URL = "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
 IMAGE_PATH = os.path.join(DOWNLOADS_PATH, "sample.jpg")
 response = requests.get(IMAGE_URL)
 if response.status_code == 200:
@@ -82,11 +85,11 @@ BACKGROUND_IMAGE_PATH = "/static/downloads/sample.jpg"
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('addemp.html', background_image=BACKGROUND_IMAGE_PATH)
+    return render_template('addemp.html', background_image=BACKGROUND_IMAGE_PATH, GROUP_NAME=GROUP_NAME)
 
 @app.route("/about", methods=['GET','POST'])
 def about():
-    return render_template('about.html', background_image=BACKGROUND_IMAGE_PATH)
+    return render_template('about.html', background_image=BACKGROUND_IMAGE_PATH, GROUP_NAME=GROUP_NAME)
     
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -110,11 +113,11 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('addempoutput.html', name=emp_name, background_imag=BACKGROUND_IMAGE_PATH)
+    return render_template('addempoutput.html', name=emp_name, background_image=BACKGROUND_IMAGE_PATH, GROUP_NAME=GROUP_NAME)
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-     return render_template("getemp.html", background_image=BACKGROUND_IMAGE_PATH)
+     return render_template("getemp.html", background_image=BACKGROUND_IMAGE_PATH, GROUP_NAME=GROUP_NAME)
 
 
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -143,7 +146,7 @@ def FetchData():
         cursor.close()
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"],  background_image=BACKGROUND_IMAGE_PATH)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"],  background_image=BACKGROUND_IMAGE_PATH, GROUP_NAME=GROUP_NAME)
 
 # if __name__ == '__main__':
     
@@ -168,4 +171,4 @@ def FetchData():
 #         print("Color not supported. Received '" + COLOR + "' expected one of " + SUPPORTED_COLORS)
 #         exit(1)
 
-app.run(host='0.0.0.0',port=8080,debug=True)
+app.run(host='0.0.0.0',port=81,debug=True)
