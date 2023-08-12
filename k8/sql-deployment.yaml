@@ -10,7 +10,7 @@ spec:
     matchLabels:
       app: mysql
       component: backend
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: mysql-db
-        image: 380544824653.dkr.ecr.us-east-1.amazonaws.com/mkhan348-docker-assignment:dbv1.0
+        image: mysql:latest
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: pass123  # Replace with your desired MySQL root password
