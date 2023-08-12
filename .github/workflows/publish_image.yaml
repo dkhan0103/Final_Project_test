@@ -28,7 +28,7 @@ jobs:
           ECR_REPOSITORY: mkhan348-docker-assignment
           IMAGE_TAG: appv1.0
         run: |
-          cd docker/
+          cd webapp/
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           
@@ -38,7 +38,7 @@ jobs:
       #     ECR_REPOSITORY: mkhan348-docker-assignment
       #     IMAGE_TAG: appv1.1
       #   run: |
-      #     cd docker/
+      #     cd webapp/
       #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile_pink .
       #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
@@ -48,6 +48,6 @@ jobs:
           ECR_REPOSITORY: mkhan348-docker-assignment
           IMAGE_TAG: dbv1.0
         run: |
-          cd docker/
+          cd webapp/
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
