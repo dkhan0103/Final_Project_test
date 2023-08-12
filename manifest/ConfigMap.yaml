@@ -1,14 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: webapp-config
+  name: webapp
 data:
-  IMAGE_URL: "/image_url"
-  DBHOST: "e-mysql"
+  DBHOST: "mysql.final.svc.cluster.local"
   DBPORT: "3306"
-  GROUP_NAME: "GROUP10"
-  IMAGE_S3: "https://clo835group10.s3.amazonaws.com/"
-  image : |
-    {
-      "url" : "https://clo835group10.s3.amazonaws.com/background.jpg"
-    }
+  GROUP_NAME: "GROUP11"
+  DBUSER: "root"
+  IMAGE_URL: "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
+ 

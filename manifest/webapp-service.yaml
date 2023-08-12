@@ -1,14 +1,17 @@
-apiVersion: apps/v1
+apiVersion: v1
 kind: Service
 metadata:
-  name: e-webapp
-  labels: 
+  name: webapp
+  labels:
     app: employees
+    component: frontend
 spec:
-  type: LoadBalancer
-  ports: 
-    - port: 80
-      targetPort: 81
-  selector: 
+  type: NodePort
+  ports:
+  - port: 81
+    targetPort: 81
+    nodePort: 30000
+  selector:
     app: employees
+    
     
