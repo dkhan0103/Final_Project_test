@@ -3,20 +3,30 @@ from pymysql import connections
 import os
 import random
 import argparse
-import boto3
-import subprocess
+
+# Import the required libraries
+import requests
+from flask import send_from_directory
+
+  
 
 
 app = Flask(__name__)
 
 DBHOST = os.environ.get("DBHOST") or "localhost"
 DBUSER = os.environ.get("DBUSER") or "root"
-DBPWD = os.environ.get("DBPWD") or "password"
+DBPWD = os.environ.get("DBPWD") or "passwors"
 DATABASE = os.environ.get("DATABASE") or "employees"
-DBPORT = int(os.environ.get("DBPORT"))
-GROUP_NAME = os.environ.get('GROUP_NAME')
-BACKGROUND_URL = os.environ.get('url') or "failed to load"
-    
+COLOR_FROM_ENV = os.environ.get('APP_COLOR') or "lime"
+DBPORT = os.environ.get("DBPORT")
+if DBPORT is not None:
+    try:
+        DBPORT = int(DBPORT)
+    except ValueError:
+        print("Invalid value for DBPORT. Using default port.")
+        DBPORT = 3306
+else:
+    DBPORT = 3306
 
 # Create a connection to the MySQL database
 db_conn = connections.Connection(
@@ -48,54 +58,35 @@ table = 'employee';
 # # Generate a random color
 # COLOR = random.choice(["red", "green", "blue", "blue2", "darkblue", "pink", "lime"])
 
-# def background_file(BACKGROUND_URL(backgroundimg1), bucket):
-#     """
-#     Function to download a given file from an S3 bucket
-#     """
-#     s3 = boto3.resource('s3')
-#     output = f"background/{backgroundimg1}"
-#     s3.Bucket(bucket).background_file(BACKGROUND_URLbackgroundimg1, output)
 
-#     return output
-
-# BACKGROUND = "background/backgroundimg1"
-
-
-# url = "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
-local_folder = "static"  # Change this to your desired local folder path
-
-# Create the local folder if it doesn't exist
-subprocess.run(["mkdir", "-p", local_folder])
-
-filename = "static/sample.jpg"
-
-# # Use curl to download the image
-# subprocess.run(["curl", "-o", f"{local_folder}/sample.jpg", url])
-
-# print("Image downloaded using curl")
-
-# @app.route("/", methods=['GET', 'POST'])
-# def home():
-#     return render_template('addemp.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
-
-# @app.route("/about", methods=['GET','POST' ])
-# def about():
-#     return render_template('about.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
- 
-# Function to download the image using curl
-def download_image(url, filename):
-    subprocess.run(["curl", "-o", filename, BACKGROUND_URL]) 
+# Define the path where you'll save the downloaded image
+DOWNLOADS_PATH = "static/downloads"
+if not os.path.exists(DOWNLOADS_PATH):
+    os.makedirs(DOWNLOADS_PATH)
     
+    
+# Download the image from the S3 URL
+IMAGE_URL = "https://group11-finalproject-s3.s3.amazonaws.com/sample.jpg"
+IMAGE_PATH = os.path.join(DOWNLOADS_PATH, "sample.jpg")
+response = requests.get(IMAGE_URL)
+if response.status_code == 200:
+    with open(IMAGE_PATH, "wb") as f:
+        f.write(response.content)
+    print("Image downloaded successfully.")
+else:
+    print("Failed to download image.")
+
+# Define a variable for the image path
+BACKGROUND_IMAGE_PATH = "/static/downloads/sample.jpg"  
+
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    download_image(BACKGROUND_URL, filename)
-    return render_template('addemp.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
+    return render_template('addemp.html', background_image=BACKGROUND_IMAGE_PATH)
 
 @app.route("/about", methods=['GET','POST'])
 def about():
-    download_image(BACKGROUND_URL, filename)
-    return render_template('about.html', GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
-
+    return render_template('about.html', background_image=BACKGROUND_IMAGE_PATH)
     
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -119,11 +110,11 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('addempoutput.html', name=emp_name)
+    return render_template('addempoutput.html', name=emp_name, background_imag=BACKGROUND_IMAGE_PATH)
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-    return render_template("getemp.html", GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
+     return render_template("getemp.html", background_image=BACKGROUND_IMAGE_PATH)
 
 
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -152,29 +143,29 @@ def FetchData():
         cursor.close()
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"],GROUP_NAME=GROUP_NAME, background=BACKGROUND_URL)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"],  background_image=BACKGROUND_IMAGE_PATH)
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     
-    # # Check for Command Line Parameters for color
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--color', required=False)
-    # args = parser.parse_args()
+#     # Check for Command Line Parameters for color
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('--color', required=False)
+#     args = parser.parse_args()
 
-    # if args.color:
-    #     print("Color from command line argument =" + args.color)
-    #     COLOR = args.color
-    #     if COLOR_FROM_ENV:
-    #         print("A color was set through environment variable -" + COLOR_FROM_ENV + ". However, color from command line argument takes precendence.")
-    # elif COLOR_FROM_ENV:
-    #     print("No Command line argument. Color from environment variable =" + COLOR_FROM_ENV)
-    #     COLOR = COLOR_FROM_ENV
-    # else:
-    #     print("No command line argument or environment variable. Picking a Random Color =" + COLOR)
+#     if args.color:
+#         print("Color from command line argument =" + args.color)
+#         COLOR = args.color
+#         if COLOR_FROM_ENV:
+#             print("A color was set through environment variable -" + COLOR_FROM_ENV + ". However, color from command line argument takes precendence.")
+#     elif COLOR_FROM_ENV:
+#         print("No Command line argument. Color from environment variable =" + COLOR_FROM_ENV)
+#         COLOR = COLOR_FROM_ENV
+#     else:
+#         print("No command line argument or environment variable. Picking a Random Color =" + COLOR)
 
-    # # Check if input color is a supported one
-    # if COLOR not in color_codes:
-    #     print("Color not supported. Received '" + COLOR + "' expected one of " + SUPPORTED_COLORS)
-    #     exit(1)
+#     # Check if input color is a supported one
+#     if COLOR not in color_codes:
+#         print("Color not supported. Received '" + COLOR + "' expected one of " + SUPPORTED_COLORS)
+#         exit(1)
 
-    app.run(host='0.0.0.0',port=81,debug=True)
+app.run(host='0.0.0.0',port=8080,debug=True)
