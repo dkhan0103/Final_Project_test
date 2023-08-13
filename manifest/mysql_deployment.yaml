@@ -18,6 +18,10 @@ spec:
         component: backend
     spec:
       serviceAccountName: clo835-group11  # Assign the created ServiceAccount
+      # volumes:  # Define a volume for the PVC
+      #   - name: mysql-storage
+      #     persistentVolumeClaim:
+      #       claimName: mysql-pvc
       containers:
       - name: mysql-db
         image: 139675527364.dkr.ecr.us-east-1.amazonaws.com/group11-repo:dbv1.0
@@ -36,3 +40,6 @@ spec:
         ports:
         - containerPort: 3306
           protocol: TCP
+        # volumeMounts:  # Mount the PVC volume to the container
+        # - name: mysql-storage
+        #   mountPath: /var/lib/mysql  # Adjust this path according to your MySQL configuration
