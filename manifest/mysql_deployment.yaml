@@ -20,7 +20,7 @@ spec:
       serviceAccountName: clo835-group11  # Assign the created ServiceAccount
       containers:
       - name: mysql-db
-        image: mysql:latest
+        image: 139675527364.dkr.ecr.us-east-1.amazonaws.com/group11-repo:dbv1.0
         env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
