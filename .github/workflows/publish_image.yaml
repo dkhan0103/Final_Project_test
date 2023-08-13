@@ -25,7 +25,7 @@ jobs:
       - name: Build and Push Application Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mkhan348-docker-assignment
+          ECR_REPOSITORY: group11-repo
           IMAGE_TAG: appv1.0
         run: |
           cd webapp/
@@ -45,7 +45,7 @@ jobs:
       - name: Build and Push MySQL DB Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mkhan348-docker-assignment
+          ECR_REPOSITORY: group11-repo
           IMAGE_TAG: dbv1.0
         run: |
           cd webapp/
